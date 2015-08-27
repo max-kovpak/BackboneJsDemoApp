@@ -50,26 +50,57 @@ define([
 
     app.container.add('Router', new (Backbone.Router.extend({
         routes: {
-            '': 'index',
-            'add': 'add',
-            'edit/:id': 'edit'
+            '': 'index'
         },
 
         index: function() {
-            require([], function(todoItem) {
+            require([
+                'collections/todos',
+                'views/todos',
+                'models/todo'
+            ], function(TodoCollection, TodosView, TodoModel) {
+                var todos = new TodoCollection();
+                var view = new TodosView({
+                    collection: todos
+                });
 
-            });
-        },
+                view.collection.on('change:completed', function(model) {
+                    var object = new (App.container.get('Models.Notification'))({
+                        'message': model.get('completed') ? 'Congratulations! This one was done: '+model.escape('title') : 'WTF?!',
+                        'type': model.get('completed') ? 'success' : 'danger'
+                    });
+                    App.notifications.add( object );
+                });
 
-        add: function() {
-            require([], function(todoItem) {
+                todos.fetch();
 
-            });
-        },
+                $('#content').html(view.render().el);
 
-        edit: function(id) {
-            require([], function(todoItem) {
+                app.container.add('todos', todos);
+                app.container.add('todos_view', view);
 
+                setTimeout(function() {
+                    var todo = new TodoModel({
+                        userId: 1,
+                        title: "Написать автотесты по всем спринтам :)"
+                    });
+
+                    todos.add(todo);
+
+                    setTimeout(function() {
+                        todo.save();
+                    }, 5000);
+
+                    setTimeout(function() {
+                        todo.destroy();
+                    }, 5000);
+
+                    setTimeout(function() {
+                        var todo = todos.at(todos.length-1);
+                        todo.set({title: '<script>alert("Sex & Drugs & Rock & Roll");</script>'});
+                        todo.save();
+                    }, 5000);
+                }, 5000);
             });
         }
     })));
