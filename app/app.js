@@ -89,17 +89,20 @@ define([
 
                     setTimeout(function() {
                         todo.save();
+
+                        setTimeout(function() {
+                            todo.destroy();
+
+                            setTimeout(function() {
+                                var t = todos.at(todos.length-1);
+                                t.set({title: '<script>alert("Sex & Drugs & Rock & Roll");</script>'});
+                                t.save();
+                            }, 5000);
+
+                        }, 5000);
+
                     }, 5000);
 
-                    setTimeout(function() {
-                        todo.destroy();
-                    }, 5000);
-
-                    setTimeout(function() {
-                        var todo = todos.at(todos.length-1);
-                        todo.set({title: '<script>alert("Sex & Drugs & Rock & Roll");</script>'});
-                        todo.save();
-                    }, 5000);
                 }, 5000);
             });
         }
