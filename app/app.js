@@ -72,7 +72,7 @@ define([
 
                 todos.fetch();
 
-                $('#content').html(view.render().el);
+                $('#todo-list').html(view.render().el);
 
                 app.container.add('todos', todos);
                 app.container.add('todos_view', view);
