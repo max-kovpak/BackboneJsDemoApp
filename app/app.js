@@ -32,9 +32,7 @@ define([
         notifications: null,
 
         start: function() {
-            this.notifications = new NotificationsCollection([
-                new Notification({message: 'test'})
-            ]);
+            this.notifications = new NotificationsCollection();
 
             var notificationsView = new NotificationsViews({
                 collection: this.notifications
